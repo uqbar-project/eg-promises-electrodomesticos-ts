@@ -4,8 +4,7 @@ node_js:
   - "stable"
 
 install:
-  - npm ci
-  - npm run build
+  - npm i
 
 script:
   - npm run test
