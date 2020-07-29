@@ -18,23 +18,18 @@ export class Cliente {
     this.saldo = this.saldo - valor
   }
 
-  comprar(cosa: Electrodomestico, valor: number) {
-    return new Promise((resolve, reject) => {
-      cosa.validarCompra(valor)
-      this.gastar(cosa.descripcion, valor)
-      resolve()
-    })
+  async comprar(cosa: Electrodomestico, valor: number) {
+    cosa.validarCompra(valor)
+    this.gastar(cosa.descripcion, valor)
   }
 
   volverEnTaxi() {
     this.gastar('Taxi', 500)
   }
 
-  procesoDeCompra(cosa: Electrodomestico, valor: number) {
-    return this.comprar(cosa, valor)
-      .then(() => {
-        this.volverEnTaxi()
-      })
+  async procesoDeCompra(cosa: Electrodomestico, valor: number) {
+    this.comprar(cosa, valor)
+    this.volverEnTaxi()
   }
 }
 
