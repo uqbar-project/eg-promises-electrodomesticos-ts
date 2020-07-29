@@ -7,7 +7,7 @@
     "lint": "eslint --fix src/**/*.ts",
     "test": "jest"
   },
-  "author": "",
+  "author": "Fernando Dodino",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^26.0.5",
