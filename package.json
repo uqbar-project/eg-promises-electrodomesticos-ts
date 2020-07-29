@@ -4,7 +4,7 @@
   "description": "Ejemplos introductorio - Promises",
   "main": "cliente.ts",
   "scripts": {
-    "test:lint": "eslint --fix src/**/*.ts scripts/**/*.ts test/**/*.ts",
+    "lint": "eslint --fix src/**/*.ts",
     "test": "jest"
   },
   "author": "",
