@@ -1,7 +1,8 @@
+/* eslint-disable no-console */
 export class Electrodomestico {
   constructor(public descripcion: string, public valorMaximo: number) { }
 
-  validarCompra(plata: number) {
+  validarCompra(plata: number): void {
     if (plata > this.valorMaximo) {
       throw new Error('Mmm... no me convence pagar más de $ ' + this.valorMaximo + ' por un/a ' + this.descripcion)
     }
@@ -9,28 +10,28 @@ export class Electrodomestico {
 }
 
 export class Cliente {
-  saldo: number = 5000
+  saldo = 5000
 
-  gastar(concepto: string, valor: number) {
+  gastar(concepto: string, valor: number): void {
     if (this.saldo < valor) {
       throw new Error('No puedo gastar ' + valor + ' en ' + concepto + '. Tengo $ ' + this.saldo)
     }
     this.saldo = this.saldo - valor
   }
 
-  comprar(cosa: Electrodomestico, valor: number) {
-    return new Promise((resolve, reject) => {
+  comprar(cosa: Electrodomestico, valor: number): Promise<void> {
+    return new Promise((resolve) => {
       cosa.validarCompra(valor)
       this.gastar(cosa.descripcion, valor)
       resolve()
     })
   }
 
-  volverEnTaxi() {
+  volverEnTaxi(): void {
     this.gastar('Taxi', 500)
   }
 
-  procesoDeCompra(cosa: Electrodomestico, valor: number) {
+  procesoDeCompra(cosa: Electrodomestico, valor: number): Promise<void> {
     return this.comprar(cosa, valor)
       .then(() => {
         this.volverEnTaxi()
@@ -55,4 +56,3 @@ cliente
   .catch((e) => {
     console.log(e.message)
   })
-
