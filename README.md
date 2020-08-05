@@ -347,3 +347,6 @@ Promise {<resolved>: undefined}
 - [We have a problem with promises](https://pouchdb.com/2015/05/18/we-have-a-problem-with-promises.html)
 - [6 things you may not know about promises](https://www.sitepoint.com/six-things-might-know-promises/)
 - [Qué son y cómo funcionan las promesas en Javascript](https://platzi.com/blog/que-es-y-como-funcionan-las-promesas-en-javascript/)
+- Async / Await
+- [Javascript Info: Async / Await](https://javascript.info/async-await)
+- [Alligator: async functions](https://alligator.io/js/async-functions/)
