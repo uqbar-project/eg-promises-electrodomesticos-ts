@@ -33,21 +33,19 @@ class Cliente {
 
   procesoDeCompra(cosa: Electrodomestico, valor: number) {
     // ir caminando no tiene efecto en nuestro código
-    cosa.validarCompra(valor)
-    this.gastar(cosa.descripcion, valor)
-    this.comprar(cosa, valor)
+    this.comprar(cosa, valor) // validando la compra
     this.volverEnTaxi()
   }
 }
 ```
 
-El electrodoméstico define un método validar compra que chequea que el valor no supere el máximo que estamos dispuesto a pagar, es un detalle implementativo. Pero lo que nos interesa reflejar en esta solución es que **todo ocurre casi inmediatamente**. Y en realidad, cada proceso puede demorar un tiempo: la decisión de la compra, e incluso el tomar el taxi.
+En esta solución es que **todo ocurre casi inmediatamente**. Y en realidad, cada proceso puede demorar un tiempo: la decisión de la compra, e incluso el tomar el taxi.
 
 ## Sincrónico vs. asincrónico
 
 Nuestra solución así planteada es **sincrónica**:
 
-- la instrucción siguiente toma el control inmediatamente después de que se ejecutó la instrucción anterior
+- la instrucción siguiente ocurre inmediatamente después de que se ejecutó la instrucción anterior
 - si una instrucción devuelve un valor, puede ser referenciado por una variable, por ejemplo:
 
 ```ts
