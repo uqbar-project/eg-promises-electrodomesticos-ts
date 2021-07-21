@@ -1,7 +1,7 @@
 
 # Ejemplo introductorio Promises
 
-[![Build Status](https://travis-ci.org/uqbar-project/eg-promises-electrodomesticos-ts.svg?branch=master)](https://travis-ci.org/uqbar-project/eg-promises-electrodomesticos-ts)
+[![build](https://github.com/uqbar-project/eg-promises-electrodomesticos-ts/actions/workflows/build.yml/badge.svg)](https://github.com/uqbar-project/eg-promises-electrodomesticos-ts/actions/workflows/build.yml) ![Coverage](./coverage/badge-statements.svg) ![Coverage](./coverage/badge-lines.svg)
 
 ## Introducción
 
