@@ -1,0 +1,14 @@
+on: ["push","pull_request"]
+
+name: build
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          version: 14.x
+      - run: npm install
+      - run: npm run test
