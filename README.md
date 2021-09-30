@@ -33,7 +33,11 @@ class Cliente {
 
   procesoDeCompra(cosa: Electrodomestico, valor: number) {
     // ir caminando no tiene efecto en nuestro código
-    this.comprar(cosa, valor) // validando la compra
+    // chequeo si el electrodoméstico está en precio
+    cosa.validarCompra(valor) 
+    // valido que tenga suficiente compra y bajo el saldo
+    this.gastar(cosa.descripcion, valor)
+    // similar a this.gastar('Taxi', 500)
     this.volverEnTaxi()
   }
 }
