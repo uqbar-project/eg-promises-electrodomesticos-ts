@@ -39,7 +39,7 @@ class Cliente {
 }
 ```
 
-En esta solución es que **todo ocurre casi inmediatamente**. Y en realidad, cada proceso puede demorar un tiempo: la decisión de la compra, e incluso el tomar el taxi.
+En esta solución **todo ocurre casi inmediatamente**. Y en realidad, cada proceso puede demorar un tiempo: la decisión de la compra, e incluso el tomar el taxi.
 
 ## Sincrónico vs. asincrónico
 
@@ -49,7 +49,7 @@ Nuestra solución así planteada es **sincrónica**:
 - si una instrucción devuelve un valor, puede ser referenciado por una variable, por ejemplo:
 
 ```ts
-const saldo = this.gastar(cosa.descripcion, valor)
+const totalGastado = this.gastar(cosa.descripcion, valor)
 ```
 
 - el método `procesoDeCompra` se ejecuta sincrónicamente, esto implica que en ningún momento otro proceso puede utilizar la VM. Esto lo hacemos porque sabemos que todas las operaciones no consumen recursos, ni demoran más del tiempo "razonable". No obstante, tenemos muchos casos donde estas situaciones no se pueden garantizar, porque salimos del cómodo entorno de nuestra máquina virtual: operaciones de I/O, acceso a recursos compartidos y concurrencia nos pueden jugar una mala pasada.
@@ -187,7 +187,7 @@ Vemos cómo construimos la promise al comprar:
   }
 ```
 
-Tanto en la validación de la compra como en el gastar, vamos a tirar una excepción:
+Tanto en la validación de la compra como en el gastar, puede ocurrir una excepción:
 
 ```ts
 class Cliente {
@@ -201,7 +201,7 @@ class Cliente {
   }
 ```
 
-Esta excepción debe ser tomada por la ejecución de la promesa de más alto nivel, de la misma manera que lo haríamos asincrónicamente con un try/catch. Pero no hacemos nada en `comprar` ni en `procesoDeCompra`, porque _no tiene mucho sentido hacer nada_, simplemente hay que dejar que falle. Los tests unitarios se encargarán de hacer ese chequeo:
+En ese caso esta excepción debe ser tomada por la ejecución de la promesa de más alto nivel, de la misma manera que lo haríamos asincrónicamente con un try/catch. Pero no hacemos nada en `comprar` ni en `procesoDeCompra`, porque _no tiene mucho sentido hacer nada_, simplemente hay que dejar que falle. Los tests unitarios se encargarán de hacer ese chequeo:
 
 ```ts
 test('Compra fallida, no me alcanza la plata', () => {
@@ -276,7 +276,7 @@ async function funcionAsincronica() {
 
 Aquí podemos ver que la versión asincrónica con async/await quedó muy parecida a la versión sincrónica original. Solo debemos tener algunos cuidados:
 
-- solo podemos usar `await` de funciones que son asincrónicas, esto puede plantear limitaciones en un script de typescript que debe ejecutar (vean por ejemplo el archivo [clienteAsyncAwait.ts](./src/clienteAsyncAwait.ts) donde sucede ésto)
+- solo podemos usar `await` dentro de funciones que son asincrónicas, esto puede plantear limitaciones en un script de typescript que debe ejecutar (vean por ejemplo el archivo [clienteAsyncAwait.ts](./src/clienteAsyncAwait.ts) donde sucede ésto)
 - una función asincrónica envuelve su resultado en una _promise_
 
 ```ts
@@ -338,6 +338,11 @@ Promise {<resolved>: undefined}
 
 - Promises: [solución original](./src/cliente.ts), con los [tests](./src/cliente.spec.ts)
 - Async/Await: [solución original](./src/clienteAsyncAwait.ts), con los [tests](./src/clienteAsyncAwait.spec.ts)
+
+## Videos explicativos
+
+- [The Node.js Event Loop: not so single thread](https://www.youtube.com/watch?v=zphcsoSJMvM), gran explicación de Bryan Hughes
+- [You don't know Node](https://www.youtube.com/watch?v=oPo4EQmkjvY), de Samer Bruna.
 
 ## Material adicional
 
