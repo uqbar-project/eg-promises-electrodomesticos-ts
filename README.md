@@ -339,10 +339,14 @@ Promise {<resolved>: undefined}
 - Promises: [solución original](./src/cliente.ts), con los [tests](./src/cliente.spec.ts)
 - Async/Await: [solución original](./src/clienteAsyncAwait.ts), con los [tests](./src/clienteAsyncAwait.spec.ts)
 
+## Herramientas
+
+- [Loupe](http://latentflip.com/loupe/?code=JC5vbignYnV0dG9uJywgJ2NsaWNrJywgZnVuY3Rpb24gb25DbGljaygpIHsKICAgIHNldFRpbWVvdXQoZnVuY3Rpb24gdGltZXIoKSB7CiAgICAgICAgY29uc29sZS5sb2coJ1lvdSBjbGlja2VkIHRoZSBidXR0b24hJyk7ICAgIAogICAgfSwgMjAwMCk7Cn0pOwoKY29uc29sZS5sb2coIkhpISIpOwoKc2V0VGltZW91dChmdW5jdGlvbiB0aW1lb3V0KCkgewogICAgY29uc29sZS5sb2coIkNsaWNrIHRoZSBidXR0b24hIik7Cn0sIDUwMDApOwoKY29uc29sZS5sb2coIldlbGNvbWUgdG8gbG91cGUuIik7!!!PGJ1dHRvbj5DbGljayBtZSE8L2J1dHRvbj4%3D), donde podés ver cómo funciona el call stack, el event loop y la cola de ejecución de procesos.
+
 ## Videos explicativos
 
+- [What the heck is the event loop anyway](https://www.youtube.com/watch?v=8aGhZQkoFbQ), lejos, una descomunal presentación de Philip Roberts.  
 - [The Node.js Event Loop: not so single thread](https://www.youtube.com/watch?v=zphcsoSJMvM), gran explicación de Bryan Hughes
-- [You don't know Node](https://www.youtube.com/watch?v=oPo4EQmkjvY), de Samer Bruna.
 
 ## Material adicional
 
