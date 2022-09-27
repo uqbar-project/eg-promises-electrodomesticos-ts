@@ -2,43 +2,44 @@
 export class Electrodomestico {
   constructor(public descripcion: string, public valorMaximo: number) { }
 
-  validarCompra(plata: number): void {
-    if (plata > this.valorMaximo) {
-      throw new Error('Mmm... no me convence pagar más de $ ' + this.valorMaximo + ' por un/a ' + this.descripcion)
-    }
+  validarCompra(plata: number): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (plata > this.valorMaximo) {
+        reject('Mmm... no me convence pagar más de $ ' + this.valorMaximo + ' por un/a ' + this.descripcion)
+      }
+      resolve()
+    })
   }
 }
 
 export class Cliente {
   saldo = 5000
 
-  gastar(concepto: string, valor: number): void {
+  gastar(concepto: string, valor: number): Promise<void> {
     if (this.saldo < valor) {
-      throw new Error('No puedo gastar ' + valor + ' en ' + concepto + '. Tengo $ ' + this.saldo)
+      return Promise.reject('No puedo gastar ' + valor + ' en ' + concepto + '. Tengo $ ' + this.saldo)
     }
     this.saldo = this.saldo - valor
+    return Promise.resolve()
   }
 
   comprar(cosa: Electrodomestico, valor: number): Promise<void> {
-    return new Promise((resolve) => {
-      cosa.validarCompra(valor)
-      this.gastar(cosa.descripcion, valor)
-      resolve()
-    })
+    return Promise
+      .resolve(cosa.validarCompra(valor))
+      .then(() => this.gastar(cosa.descripcion, valor))
   }
 
-  volverEnTaxi(): void {
-    this.gastar('Taxi', 500)
+  volverEnTaxi(): Promise<void> {
+    return Promise.resolve(this.gastar('Taxi', 500))
   }
 
   procesoDeCompra(cosa: Electrodomestico, valor: number): Promise<void> {
-    return this.comprar(cosa, valor)
-      .then(() => {
-        this.volverEnTaxi()
-      })
+    return Promise
+      .resolve()
+      .then(() => this.comprar(cosa, valor))
+      .then(() => this.volverEnTaxi())
   }
 }
-
 
 const cliente = new Cliente()
 cliente
