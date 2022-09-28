@@ -347,6 +347,9 @@ Promise {<resolved>: undefined}
 
 - [Javascript Visualizer 9000](https://www.jsv9000.app/), donde podés ver cómo funciona el call stack, el event loop y la cola de ejecución de procesos. Por ejemplo este [test básico](https://www.jsv9000.app/?code=ZnVuY3Rpb24gcHJ1ZWJhKCkgewogIGNvbnNvbGUubG9nKCIxIikKICBjb25zb2xlLmxvZygiMiIpCiAgLy8gc2V0VGltZW91dChmdW5jdGlvbigpIHsgY29uc29sZS5sb2coIjIiKSB9LCAwKQogIGNvbnNvbGUubG9nKCIzIikKfQoKcHJ1ZWJhKCk%3D).
 
+Te dejamos en una carpeta especial [varios ejemplos](./ejemplos_visualizer/) para que pruebes.
+
+
 ## Videos explicativos
 
 - [What the heck is the event loop anyway](https://www.youtube.com/watch?v=8aGhZQkoFbQ), lejos, una descomunal presentación de Philip Roberts.  
