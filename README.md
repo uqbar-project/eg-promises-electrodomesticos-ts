@@ -185,7 +185,7 @@ Vemos cómo construimos la promise al comprar:
   comprar(cosa: Electrodomestico, valor: number) {
     return new Promise((resolve, reject) => {
       cosa.validarCompra(valor)
-      this.gastar(cosa.descripcion, valor)
+      this.gastar(cosa.descripcion, cosa.valor)
       resolve()
     })
   }
@@ -197,7 +197,7 @@ Tanto en la validación de la compra como en el gastar, puede ocurrir una excepc
 class Cliente {
   ...
 
-  gastar(concepto: string, valor: number) {
+  gastar(concepto: string, valor: number): void {
     if (this.saldo < valor) {
       throw new Error('No puedo gastar ' + valor + ' en ' + concepto + '. Tengo $ ' + this.saldo)
     }
@@ -209,7 +209,7 @@ En ese caso esta excepción debe ser tomada por la ejecución de la promesa de m
 
 ```ts
 test('Compra fallida, no me alcanza la plata', () => {
-  return cliente.procesoDeCompra(new Electrodomestico('LCD TV', 6000), 5100).catch((e) => {
+  return cliente.procesoDeCompra(new Electrodomestico('LCD TV', 5100), 6000).catch((e) => {
     expect(e.message).toBe('No puedo gastar 5100 en LCD TV. Tengo $ 5000')
     expect(cliente.saldo).toBe(5000)
   })
@@ -220,7 +220,7 @@ Por el contrario si la compra es exitosa, debemos trabajar el bloque `then`:
 
 ```ts
 test('Compra exitosa de un LCD TV barata por debajo del saldo del cliente', () => {
-  return cliente.procesoDeCompra(new Electrodomestico('LCD TV', 4000), 3800).then(() => {
+  return cliente.procesoDeCompra(new Electrodomestico('LCD TV', 3800), 4000).then(() => {
     expect(cliente.saldo).toBe(700)
   })
 })
