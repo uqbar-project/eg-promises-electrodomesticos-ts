@@ -10,3 +10,5 @@ function main() {
     .then(() => comprar())
   console.log('saldo', saldo)
 }
+
+main()

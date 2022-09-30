@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 export class Electrodomestico {
-  constructor(public descripcion: string, public valorMaximo: number) { }
+  constructor(public descripcion: string, public valor: number) { }
 
-  validarCompra(plata: number): void {
-    if (plata > this.valorMaximo) {
-      throw new Error('Mmm... no me convence pagar más de $ ' + this.valorMaximo + ' por un/a ' + this.descripcion)
+  validarCompra(valorMaximo: number): void {
+    if (valorMaximo < this.valor) {
+      throw new Error('Mmm... no me convence pagar más de $ ' + this.valor + ' por un/a ' + this.descripcion)
     }
   }
 }
@@ -21,7 +21,7 @@ export class Cliente {
 
   async comprar(cosa: Electrodomestico, valor: number): Promise<void> {
     cosa.validarCompra(valor)
-    this.gastar(cosa.descripcion, valor)
+    this.gastar(cosa.descripcion, cosa.valor)
   }
 
   volverEnTaxi(): void {
@@ -35,19 +35,19 @@ export class Cliente {
 }
 
 
-const cliente = new Cliente()
-cliente
-  // OK
-  // .procesoDeCompra(new Electrodomestico('LCD TV', 4000), 3800)
-  // No puede volver en Taxi
-  // .procesoDeCompra(new Electrodomestico('LCD TV', 4700), 4600)
-  // LCD TV -> no tengo plata
-  // .procesoDeCompra(new Electrodomestico('LCD TV', 6000), 5100)
-  // LCD TV -> me la quieren vender muy cara
-  .procesoDeCompra(new Electrodomestico('LCD TV', 6000), 6100)
-  .then(() => {
-    console.log('Proceso de compra finalizado. Saldo: ' + cliente.saldo)
-  })
-  .catch((e) => {
-    console.log(e.message)
-  })
+// const cliente = new Cliente()
+// cliente
+// OK
+// .procesoDeCompra(new Electrodomestico('LCD TV', 4000), 3800)
+// No puede volver en Taxi
+// .procesoDeCompra(new Electrodomestico('LCD TV', 4700), 4600)
+// LCD TV -> no tengo plata
+// .procesoDeCompra(new Electrodomestico('LCD TV', 6000), 5100)
+// LCD TV -> me la quieren vender muy cara
+// .procesoDeCompra(new Electrodomestico('LCD TV', 6000), 6100)
+// .then(() => {
+//   console.log('Proceso de compra finalizado. Saldo: ' + cliente.saldo)
+// })
+// .catch((e) => {
+//   console.log(e.message)
+// })
