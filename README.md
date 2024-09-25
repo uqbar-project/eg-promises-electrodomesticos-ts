@@ -347,6 +347,24 @@ Promise {<resolved>: undefined}
 
 - [Javascript Visualizer 9000](https://www.jsv9000.app/), donde podés ver cómo funciona el call stack, el event loop y la cola de ejecución de procesos. Por ejemplo este [test básico](https://www.jsv9000.app/?code=ZnVuY3Rpb24gcHJ1ZWJhKCkgewogIGNvbnNvbGUubG9nKCIxIikKICBjb25zb2xlLmxvZygiMiIpCiAgLy8gc2V0VGltZW91dChmdW5jdGlvbigpIHsgY29uc29sZS5sb2coIjIiKSB9LCAwKQogIGNvbnNvbGUubG9nKCIzIikKfQoKcHJ1ZWJhKCk%3D).
 
+Y para entender cómo la promise pone en la Task Queue las funciones, probemos este otro ejemplo:
+
+```js
+function sumar1(valor) {
+  console.log(valor)
+  return valor + 1
+}
+
+console.log('arranco')
+Promise.resolve(1)
+  .then(sumar1)
+  .then(sumar1)
+  .then((valor) => console.log('valor final', valor))
+console.log('termino')
+```
+
+Ahí vemos cómo el console.log que escribe "termino" en realidad es solo la tercera instrucción
+
 Te dejamos en una carpeta especial [varios ejemplos](./ejemplos_visualizer/) para que pruebes.
 
 
