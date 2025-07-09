@@ -1,7 +1,7 @@
 
 # Ejemplo introductorio Promises
 
-[![build](https://github.com/uqbar-project/eg-promises-electrodomesticos-ts/actions/workflows/build.yml/badge.svg)](https://github.com/uqbar-project/eg-promises-electrodomesticos-ts/actions/workflows/build.yml) ![Coverage](./coverage/badge-statements.svg) ![Coverage](./coverage/badge-lines.svg)
+[![build](https://github.com/uqbar-project/eg-promises-electrodomesticos-ts/actions/workflows/build.yml/badge.svg)](https://github.com/uqbar-project/eg-promises-electrodomesticos-ts/actions/workflows/build.yml) [![codecov](https://codecov.io/gh/uqbar-project/eg-promises-electrodomesticos-ts/graph/badge.svg?token=WYVGPG3UPN)](https://codecov.io/gh/uqbar-project/eg-promises-electrodomesticos-ts)
 
 ## Introducción
 

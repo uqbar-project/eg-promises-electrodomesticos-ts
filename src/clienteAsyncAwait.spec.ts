@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from 'vitest'
-import { Cliente, Electrodomestico } from './cliente'
+import { Cliente, Electrodomestico } from './clienteAsyncAwait'
 
 describe('test del cliente async/await', () => {
 
