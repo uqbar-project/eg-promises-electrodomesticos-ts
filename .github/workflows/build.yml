@@ -1,14 +1,27 @@
-on: ["push","pull_request"]
-
 name: build
+
+on:
+  - push
+  - pull_request
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          version: 14.x
+          node-version: '22'
+
       - run: npm install
-      - run: npm run test
+
+      - run: npm run test -- --coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: uqbar-project/eg-rapidos-y-objetosos-ts
+          fail_ci_if_error: true

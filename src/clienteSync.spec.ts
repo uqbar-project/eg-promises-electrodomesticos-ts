@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, test } from 'vitest'
 import { Cliente, Electrodomestico } from './clienteSync'
 
 describe('test del cliente', () => {

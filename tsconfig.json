@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2020",
     "module": "commonjs",
     "outDir": "dist/temp",
     "lib": [
@@ -12,11 +12,12 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "types": ["vitest"]
   },
   "include": [
     "src/**/*.ts",
     "test/**/*.ts",
-    "scripts/**/*.ts",
+    "vitest.config.ts"
   ]
 }

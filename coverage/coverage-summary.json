@@ -1,3 +1,0 @@
-{"total": {"lines":{"total":20,"covered":19,"skipped":0,"pct":95},"statements":{"total":21,"covered":20,"skipped":0,"pct":95.24},"functions":{"total":11,"covered":10,"skipped":0,"pct":90.91},"branches":{"total":4,"covered":4,"skipped":0,"pct":100}}
-,"/home/dodain/workspace/ts-2021/eg-promises-electrodomesticos-ts/src/cliente.ts": {"lines":{"total":20,"covered":19,"skipped":0,"pct":95},"functions":{"total":11,"covered":10,"skipped":0,"pct":90.91},"statements":{"total":21,"covered":20,"skipped":0,"pct":95.24},"branches":{"total":4,"covered":4,"skipped":0,"pct":100}}
-}
