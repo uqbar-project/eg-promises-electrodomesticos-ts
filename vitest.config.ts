@@ -15,7 +15,10 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['lcov', 'text-summary'],
       reportsDirectory: './coverage',
-      exclude: ['ejemplos_visualizer/**'],
+      exclude: [
+        'ejemplos_visualizer/**',
+        'vitest.config.ts',
+      ],
     },
   },
 })
