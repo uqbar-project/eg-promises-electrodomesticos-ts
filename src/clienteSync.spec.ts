@@ -35,7 +35,7 @@ describe('test del cliente', () => {
     const cliente = new Cliente(2000)
     try {
       cliente.procesoDeCompra(electrodomestico, 800)
-    } catch (error: unknown) { 
+    } catch (error: unknown) {
       expect((error as Error).message).toBe('Mmm... no me convence pagar más de $ 800 por un/a LCD TV')
       expect(cliente.saldo).toBe(2000)
     }

@@ -14,7 +14,7 @@ export default defineConfig(
     },
     rules: {
       '@stylistic/quotes': ['warn', 'single'],
-      '@stylistic/semi': ['warn', 'never'],
+      '@stylistic/semi': ['error', 'never'],
       '@stylistic/indent': ['warn', 2],
     },
   },
