@@ -2,15 +2,15 @@
 export class Electrodomestico {
   constructor(public descripcion: string, public valor: number) { }
 
-  validarCompra(valorMaximo: number): void {
-    if (valorMaximo < this.valor) {
-      throw new Error('Mmm... no me convence pagar más de $ ' + valorMaximo + ' por un/a ' + this.descripcion)
+  validarCompra(limiteMaximo: number): void {
+    if (limiteMaximo < this.valor) {
+      throw new Error('Mmm... no me convence pagar más de $ ' + limiteMaximo + ' por un/a ' + this.descripcion)
     }
   }
 }
 
 export class Cliente {
-  saldo = 5000
+  constructor(public saldo = 5000) {}
 
   gastar(concepto: string, valor: number): void {
     if (this.saldo < valor) {
@@ -19,8 +19,8 @@ export class Cliente {
     this.saldo = this.saldo - valor
   }
 
-  comprar(cosa: Electrodomestico, valor: number): void {
-    cosa.validarCompra(valor)
+  comprar(cosa: Electrodomestico, limiteMaximo: number): void {
+    cosa.validarCompra(limiteMaximo)
     this.gastar(cosa.descripcion, cosa.valor)
   }
 
@@ -28,8 +28,8 @@ export class Cliente {
     this.gastar('Taxi', 500)
   }
 
-  procesoDeCompra(cosa: Electrodomestico, valor: number): void {
-    this.comprar(cosa, valor)
+  procesoDeCompra(cosa: Electrodomestico, limiteMaximo: number): void {
+    this.comprar(cosa, limiteMaximo)
     this.volverEnTaxi()
   }
 }

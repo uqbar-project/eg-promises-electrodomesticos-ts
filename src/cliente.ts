@@ -2,10 +2,10 @@
 export class Electrodomestico {
   constructor(public descripcion: string, public valor: number) { }
 
-  validarCompra(valorMaximo: number): Promise<void> {
+  validarCompra(limiteMaximo: number): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (valorMaximo < this.valor) {
-        reject('Mmm... no me convence pagar más de $ ' + valorMaximo + ' por un/a ' + this.descripcion)
+      if (limiteMaximo < this.valor) {
+        reject('Mmm... no me convence pagar más de $ ' + limiteMaximo + ' por un/a ' + this.descripcion)
       }
       resolve()
     })
@@ -13,7 +13,7 @@ export class Electrodomestico {
 }
 
 export class Cliente {
-  saldo = 5000
+  constructor(public saldo = 5000) {}
 
   gastar(concepto: string, valor: number): Promise<void> {
     if (this.saldo < valor) {
@@ -23,9 +23,9 @@ export class Cliente {
     return Promise.resolve()
   }
 
-  comprar(cosa: Electrodomestico, valor: number): Promise<void> {
+  comprar(cosa: Electrodomestico, limiteMaximo: number): Promise<void> {
     return Promise
-      .resolve(cosa.validarCompra(valor))
+      .resolve(cosa.validarCompra(limiteMaximo))
       .then(() => this.gastar(cosa.descripcion, cosa.valor))
   }
 
@@ -39,21 +39,21 @@ export class Cliente {
       // Bien, cada promesa se debe encadenar
       .then(() => this.comprar(cosa, valor))
       .then(() => this.volverEnTaxi())
-      // ===============================================
-      // TODO: que se vea la diferencia entre () => { } y () => expresión, que devuelva la promise
-      // MAL, al ponerla entre llaves la función es () => void, por lo tanto no devuelve la promesa
-      // y no se encadena con la siguiente. El error en comprar no se atrapa. El primer test pasa,
-      // porque las promesas se ejecutan.
-      // .then(() => { this.comprar(cosa, valor) })
-      // .then(() => { this.volverEnTaxi() })
-      // ================================================
-      // otra cosa que puede pasar
-      // MAL, no estamos generando la promesa para comprar... por lo tanto no capturamos promesas
-      // rechazadas, y se rompe. El primer test pasa
-      // .then(() => {
-      //   this.comprar(cosa, valor)
-      //   return this.volverEnTaxi()
-      // })
+    // ===============================================
+    // TODO: que se vea la diferencia entre () => { } y () => expresión, que devuelva la promise
+    // MAL, al ponerla entre llaves la función es () => void, por lo tanto no devuelve la promesa
+    // y no se encadena con la siguiente. El error en comprar no se atrapa. El primer test pasa,
+    // porque las promesas se ejecutan.
+    // .then(() => { this.comprar(cosa, valor) })
+    // .then(() => { this.volverEnTaxi() })
+    // ================================================
+    // otra cosa que puede pasar
+    // MAL, no estamos generando la promesa para comprar... por lo tanto no capturamos promesas
+    // rechazadas, y se rompe. El primer test pasa
+    // .then(() => {
+    //   this.comprar(cosa, valor)
+    //   return this.volverEnTaxi()
+    // })
   }
 
 }

@@ -2,15 +2,15 @@
 export class Electrodomestico {
   constructor(public descripcion: string, public valor: number) { }
 
-  async validarCompra(valorMaximo: number): Promise<void> {
-    if (valorMaximo < this.valor) {
+  async validarCompra(limiteMaximo: number): Promise<void> {
+    if (limiteMaximo < this.valor) {
       throw new Error('Mmm... no me convence pagar más de $ ' + this.valor + ' por un/a ' + this.descripcion)
     }
   }
 }
 
 export class Cliente {
-  saldo = 5000
+  constructor(public saldo = 5000) {}
 
   async gastar(concepto: string, valor: number): Promise<void> {
     if (this.saldo < valor) {
@@ -19,8 +19,8 @@ export class Cliente {
     this.saldo = this.saldo - valor
   }
 
-  async comprar(cosa: Electrodomestico, valor: number): Promise<void> {
-    await cosa.validarCompra(valor)
+  async comprar(cosa: Electrodomestico, limiteMaximo: number): Promise<void> {
+    await cosa.validarCompra(limiteMaximo)
     await this.gastar(cosa.descripcion, cosa.valor)
   }
 
@@ -28,8 +28,8 @@ export class Cliente {
     await this.gastar('Taxi', 500)
   }
 
-  async procesoDeCompra(cosa: Electrodomestico, valor: number): Promise<void> {
-    await this.comprar(cosa, valor)
+  async procesoDeCompra(cosa: Electrodomestico, limiteMaximo: number): Promise<void> {
+    await this.comprar(cosa, limiteMaximo)
     await this.volverEnTaxi()
   }
 }
