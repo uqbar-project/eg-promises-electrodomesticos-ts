@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+// /* eslint-disable no-console */
 export class Electrodomestico {
   constructor(public descripcion: string, public valor: number) { }
 
@@ -10,7 +10,7 @@ export class Electrodomestico {
 }
 
 export class Cliente {
-  constructor(public saldo = 5000) {}
+  constructor(public saldo = 5000) { }
 
   gastar(concepto: string, valor: number): void {
     if (this.saldo < valor) {

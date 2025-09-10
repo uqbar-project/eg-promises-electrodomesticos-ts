@@ -3,23 +3,29 @@
   "version": "1.0.0",
   "description": "Ejemplos introductorio - Promises",
   "main": "cliente.ts",
+  "type": "module",
   "scripts": {
-    "lint": "eslint --fix src/**/*.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "dev": "tsx watch src/clientePromises.ts",
+    "check-types": "tsc --noEmit"
   },
   "author": "Fernando Dodino",
   "license": "ISC",
   "devDependencies": {
+    "@stylistic/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.8.3",
+    "eslint": "^9.35.0",
+    "tsx": "^4.20.5",
+    "typescript-eslint": "^8.43.0",
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.43.0",
-    "@typescript-eslint/parser": "^8.43.0",
-    "eslint": "^9.35.0"
+    "typescript": "^5.9.2"
   }
 }

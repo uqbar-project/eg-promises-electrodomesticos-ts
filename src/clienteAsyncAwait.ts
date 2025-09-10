@@ -1,10 +1,10 @@
-/* eslint-disable no-console */
+// /* eslint-disable no-console */
 export class Electrodomestico {
   constructor(public descripcion: string, public valor: number) { }
 
   async validarCompra(limiteMaximo: number): Promise<void> {
     if (limiteMaximo < this.valor) {
-      throw new Error('Mmm... no me convence pagar más de $ ' + this.valor + ' por un/a ' + this.descripcion)
+      throw new Error('Mmm... no me convence pagar más de $ ' + limiteMaximo + ' por un/a ' + this.descripcion)
     }
   }
 }

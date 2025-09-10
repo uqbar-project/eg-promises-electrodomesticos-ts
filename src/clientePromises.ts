@@ -1,11 +1,10 @@
-/* eslint-disable no-console */
 export class Electrodomestico {
   constructor(public descripcion: string, public valor: number) { }
 
   validarCompra(limiteMaximo: number): Promise<void> {
     return new Promise((resolve, reject) => {
       if (limiteMaximo < this.valor) {
-        reject('Mmm... no me convence pagar más de $ ' + limiteMaximo + ' por un/a ' + this.descripcion)
+        reject(new Error('Mmm... no me convence pagar más de $ ' + limiteMaximo + ' por un/a ' + this.descripcion))
       }
       resolve()
     })
@@ -17,7 +16,7 @@ export class Cliente {
 
   gastar(concepto: string, valor: number): Promise<void> {
     if (this.saldo < valor) {
-      return Promise.reject('No puedo gastar ' + valor + ' en ' + concepto + '. Tengo $ ' + this.saldo)
+      return Promise.reject(new Error('No puedo gastar ' + valor + ' en ' + concepto + '. Tengo $ ' + this.saldo))
     }
     this.saldo = this.saldo - valor
     return Promise.resolve()
@@ -58,12 +57,12 @@ export class Cliente {
 
 }
 
-// const cliente = new Cliente()
+// const cliente = new Cliente(2000)
 // cliente
 // OK
-// .procesoDeCompra(new Electrodomestico('LCD TV', 4000), 3800)
+// .procesoDeCompra(new Electrodomestico('LCD TV', 1000), 1200)
 // No puede volver en Taxi
-// .procesoDeCompra(new Electrodomestico('LCD TV', 4700), 4600)
+// .procesoDeCompra(new Electrodomestico('LCD TV', 1600), 1700)
 // LCD TV -> no tengo plata
 // .procesoDeCompra(new Electrodomestico('LCD TV', 6000), 5100)
 // LCD TV -> me la quieren vender muy cara
@@ -74,3 +73,4 @@ export class Cliente {
 // .catch((e) => {
 //   console.log(e.message)
 // })
+// .then(() => { console.info('Finalizado')  })
