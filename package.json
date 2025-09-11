@@ -9,7 +9,7 @@
     "lint:fix": "eslint --fix .",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "dev": "tsx watch src/clientePromises.ts",
+    "dev": "tsx watch src/cliente.ts",
     "check-types": "tsc --noEmit"
   },
   "author": "Fernando Dodino",
