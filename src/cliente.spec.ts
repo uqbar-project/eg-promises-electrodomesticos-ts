@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { Cliente, Electrodomestico } from './clienteSync'
+import { Cliente, Electrodomestico } from './cliente'
 
 describe('test del cliente', () => {
 
