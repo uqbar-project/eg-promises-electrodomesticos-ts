@@ -35,7 +35,7 @@ export class Cliente {
 }
 
 // try {
-const cliente = new Cliente(5000)
+// const cliente = new Cliente(5000)
 // OK
 // cliente.procesoDeCompra(new Electrodomestico('LCD TV', 4000), 4200)
 // No puede volver en Taxi
@@ -43,11 +43,11 @@ const cliente = new Cliente(5000)
 // LCD TV -> no tengo plata
 // cliente.procesoDeCompra(new Electrodomestico('LCD TV', 6000), 6200)
 // LCD TV -> me la quieren vender muy cara
-cliente.procesoDeCompra(new Electrodomestico('LCD TV', 4000), 2000)
+// cliente.procesoDeCompra(new Electrodomestico('LCD TV', 4000), 2000)
 //   console.log('Proceso de compra finalizado. Saldo: ' + cliente.saldo)
 // } catch(e) {
 //   console.log(e)
 // }
 
-console.info('Cliente queda con saldo de: ', cliente.saldo)
-console.info('Finalizado')
+// console.info('Cliente queda con saldo de: ', cliente.saldo)
+// console.info('Finalizado')
