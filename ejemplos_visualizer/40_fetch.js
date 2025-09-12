@@ -9,3 +9,12 @@ fetch('https://pokeapi.co/api/v2/ability/?offset=0&limit=20')
     const filtrados = result.results.filter(pokemon => pokemon.name > 'n')
     console.log('pokemones filtrados', filtrados)
   })
+
+(async () => {
+  const result = await fetch('https://pokeapi.co/api/v2/ability/?offset=0&limit=20')
+  if (!result.ok) {
+    throw new Error('Error en la llamada a la API: ' + result.statusText)
+  }
+  const filtrados = await result.json()
+  console.info(filtrados.results.filter(pokemon => pokemon.name > 'n'))
+})() 

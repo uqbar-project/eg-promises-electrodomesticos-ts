@@ -15,6 +15,7 @@ describe('test del cliente', () => {
     const cliente = new Cliente(1400)
     try {
       cliente.procesoDeCompra(electrodomestico, 1200)
+      throw new Error('No debería haber comprado')
     } catch (error: unknown) {
       expect((error as Error).message).toBe('No puedo gastar 500 en Taxi. Tengo $ 400')
       expect(cliente.saldo).toBe(400)
@@ -25,6 +26,7 @@ describe('test del cliente', () => {
     const cliente = new Cliente(900)
     try {
       cliente.procesoDeCompra(electrodomestico, 1200)
+      throw new Error('No debería haber comprado')
     } catch (error: unknown) {
       expect((error as Error).message).toBe('No puedo gastar 1000 en LCD TV. Tengo $ 900')
       expect(cliente.saldo).toBe(900)
@@ -35,6 +37,7 @@ describe('test del cliente', () => {
     const cliente = new Cliente(2000)
     try {
       cliente.procesoDeCompra(electrodomestico, 800)
+      throw new Error('No debería haber comprado')
     } catch (error: unknown) {
       expect((error as Error).message).toBe('Mmm... no me convence pagar más de $ 800 por un/a LCD TV')
       expect(cliente.saldo).toBe(2000)
