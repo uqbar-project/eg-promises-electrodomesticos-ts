@@ -11,7 +11,7 @@ fetch('https://pokeapi.co/api/v2/ability/?offset=0&limit=20')
   })
 
 (async () => {
-  const result = await fetch('https://pokeapi.co/api/v2/ability/?offset=0&limit=20')
+  const result = await fetch('https://pokeapi.co/api/v2/pokemon')
   if (!result.ok) {
     throw new Error('Error en la llamada a la API: ' + result.statusText)
   }
