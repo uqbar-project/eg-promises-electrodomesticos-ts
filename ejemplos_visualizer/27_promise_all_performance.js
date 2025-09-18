@@ -16,12 +16,18 @@ time("sequential", async () => {
   await delayedResponse();
   await delayedResponse();
   await delayedResponse();
+  await delayedResponse();
+  await delayedResponse();
+  await delayedResponse();
 });
 
 time("parallel", async () => {
   await Promise.all([
     delayedResponse(), 
     delayedResponse(), 
-    delayedResponse()
+    delayedResponse(),
+    delayedResponse(),
+    delayedResponse(),
+    delayedResponse(),
   ]);
 });
