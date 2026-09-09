@@ -49,7 +49,7 @@ export class Cliente {
     this.ubicacion = lugar
   }
 
-  async gastar(concepto: string, valor: number): Promise<void> {
+  gastar(concepto: string, valor: number): void {
     if (this.saldo < valor) {
       throw new Error(`No puedo gastar ${valor} en ${concepto}. Tengo $ ${this.saldo}`)
     }
@@ -58,7 +58,7 @@ export class Cliente {
 
   async comprar(cosa: Electrodomestico): Promise<void> {
     const productoBuscado = await cosa.obtenerProducto()
-    await this.gastar(productoBuscado.descripcion, productoBuscado.precio)
+    this.gastar(productoBuscado.descripcion, productoBuscado.precio)
   }
 
   async armarViaje(origen: Location, destino: Location): Promise<number> {
@@ -70,7 +70,7 @@ export class Cliente {
 
   async volverEnTaxi(): Promise<void> {
     const distanciaEnMetros = await this.armarViaje(this.ubicacion, this.casa)
-    await this.gastar('Taxi', (distanciaEnMetros / 1000) * VALOR_POR_KM)
+    this.gastar('Taxi', (distanciaEnMetros / 1000) * VALOR_POR_KM)
   }
 
   async procesoDeCompra(cosa: Electrodomestico): Promise<void> {

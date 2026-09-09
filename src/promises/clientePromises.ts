@@ -49,18 +49,17 @@ export class Cliente {
     this.ubicacion = lugar
   }
 
-  gastar(concepto: string, valor: number): Promise<void> {
+  gastar(concepto: string, valor: number): void {
     if (this.saldo < valor) {
-      return Promise.reject(new Error(`No puedo gastar ${valor} en ${concepto}. Tengo $ ${this.saldo}`))
+      throw new Error(`No puedo gastar ${valor} en ${concepto}. Tengo $ ${this.saldo}`)
     }
     this.saldo = this.saldo - valor
-    return Promise.resolve()
   }
 
   comprar(cosa: Electrodomestico): Promise<void> {
-    return cosa
-      .obtenerProducto()
-      .then((productoBuscado) => this.gastar(productoBuscado.descripcion, productoBuscado.precio))
+    return cosa.obtenerProducto().then((productoBuscado) => {
+      this.gastar(productoBuscado.descripcion, productoBuscado.precio)
+    })
   }
 
   armarViaje(origen: Location, destino: Location): Promise<number> {
@@ -71,9 +70,9 @@ export class Cliente {
   }
 
   volverEnTaxi(): Promise<void> {
-    return this.armarViaje(this.ubicacion, this.casa).then((distanciaEnMetros) =>
-      this.gastar('Taxi', (distanciaEnMetros / 1000) * VALOR_POR_KM),
-    )
+    return this.armarViaje(this.ubicacion, this.casa).then((distanciaEnMetros) => {
+      this.gastar('Taxi', (distanciaEnMetros / 1000) * VALOR_POR_KM)
+    })
   }
 
   procesoDeCompra(cosa: Electrodomestico): Promise<void> {
