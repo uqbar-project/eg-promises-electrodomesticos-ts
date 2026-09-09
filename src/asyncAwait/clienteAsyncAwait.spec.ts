@@ -55,5 +55,7 @@ describe('test del cliente async/await', () => {
     await expect(cliente.procesoDeCompra(electrodomestico)).rejects.toThrow(
       'No puedo gastar 1000 en LCD TV. Tengo $ 900',
     )
+
+    expect(cliente.saldo).toBe(900)
   })
 })
