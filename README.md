@@ -265,39 +265,35 @@ test('Compra exitosa de un LCD TV barata por debajo del saldo del cliente', () =
 })
 ```
 
-Por el contrario si la compra es exitosa pero no nos alcanza para el taxi, o si directamente no nos alcanza para el televisor, la promesa se rechaza y debemos trabajar el bloque `catch`:
+Por el contrario si la compra es exitosa pero no nos alcanza para el taxi, o si directamente no nos alcanza para el televisor, la promesa se rechaza. Para verificar el rechazo (sin usar async/await) usamos el matcher `rejects`, que espera una promise, y encadenamos con un `then` el chequeo del saldo:
 
 ```ts
 test('Compra exitosa, pero no puede volver en Taxi', () => {
   mockFetch(20000)
   const cliente = new Cliente(1400, casaDelCliente)
   cliente.caminarA(ubicacionDelNegocio)
-  return cliente
-    .procesoDeCompra(electrodomestico)
-    .then(() => {
-      throw new Error('No debería haber comprado')
-    })
-    .catch((message) => {
-      expect(message.message).toBe('No puedo gastar 500 en Taxi. Tengo $ 400')
-      expect(cliente.saldo).toBe(400)
-    })
+  return expect(cliente.procesoDeCompra(electrodomestico))
+    .rejects.toThrow('No puedo gastar 500 en Taxi. Tengo $ 400')
+    .then(() => expect(cliente.saldo).toBe(400))
 })
 
 test('Compra fallida, no me alcanza la plata', () => {
   mockFetch(20000)
   const cliente = new Cliente(900, casaDelCliente)
   cliente.caminarA(ubicacionDelNegocio)
-  return cliente
-    .procesoDeCompra(electrodomestico)
-    .then(() => {
-      throw new Error('No debería haber comprado')
-    })
-    .catch((message) => {
-      expect(message.message).toBe('No puedo gastar 1000 en LCD TV. Tengo $ 900')
-      expect(cliente.saldo).toBe(900)
-    })
+  return expect(cliente.procesoDeCompra(electrodomestico))
+    .rejects.toThrow('No puedo gastar 1000 en LCD TV. Tengo $ 900')
+    .then(() => expect(cliente.saldo).toBe(900))
 })
 ```
+
+En la versión async/await usamos el mismo matcher, pero con `await` en lugar de encadenar (así la línea queda parecida a una espera síncrona):
+
+```ts
+await expect(cliente.procesoDeCompra(electrodomestico)).rejects.toThrow('No puedo gastar 1000 en LCD TV. Tengo $ 900')
+```
+
+De esta manera el caso de éxito se verifica con el bloque `then`, y los errores con el matcher `rejects`.
 
 Para que los tests sean determinísticos (y no dependan de la red ni del contenido real del archivo), se simulan las dos operaciones asincrónicas:
 
@@ -310,7 +306,7 @@ Los escenarios cubiertos son:
 - me alcanza para comprar el electrodoméstico pero no para el taxi => promesa rechazada, me queda $ 400.
 - no me alcanza para comprar el electrodoméstico => promesa rechazada, mi saldo no cambia ($ 900).
 
-Salvo el caso que explícitamente dice "promesa resuelta exitosamente", los demás tests estarán esperando el rechazo por el `catch`.
+Salvo el caso que explícitamente dice "promesa resuelta exitosamente", los demás tests estarán esperando el rechazo con el matcher `rejects`.
 
 ## Equivalencias: async/await
 

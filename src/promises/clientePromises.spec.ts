@@ -45,29 +45,17 @@ describe('test del cliente', () => {
     mockFetch(20000)
     const cliente = new Cliente(1400, casaDelCliente)
     cliente.caminarA(ubicacionDelNegocio)
-    return cliente
-      .procesoDeCompra(electrodomestico)
-      .then(() => {
-        throw new Error('No debería haber comprado')
-      })
-      .catch((message: unknown) => {
-        expect((message as Error).message).toBe('No puedo gastar 500 en Taxi. Tengo $ 400')
-        expect(cliente.saldo).toBe(400)
-      })
+    return expect(cliente.procesoDeCompra(electrodomestico))
+      .rejects.toThrow('No puedo gastar 500 en Taxi. Tengo $ 400')
+      .then(() => expect(cliente.saldo).toBe(400))
   })
 
   test('promises - Compra fallida, no me alcanza la plata', () => {
     mockFetch(20000)
     const cliente = new Cliente(900, casaDelCliente)
     cliente.caminarA(ubicacionDelNegocio)
-    return cliente
-      .procesoDeCompra(electrodomestico)
-      .then(() => {
-        throw new Error('No debería haber comprado')
-      })
-      .catch((message: unknown) => {
-        expect((message as Error).message).toBe('No puedo gastar 1000 en LCD TV. Tengo $ 900')
-        expect(cliente.saldo).toBe(900)
-      })
+    return expect(cliente.procesoDeCompra(electrodomestico))
+      .rejects.toThrow('No puedo gastar 1000 en LCD TV. Tengo $ 900')
+      .then(() => expect(cliente.saldo).toBe(900))
   })
 })
