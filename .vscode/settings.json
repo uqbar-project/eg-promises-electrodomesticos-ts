@@ -1,19 +1,13 @@
 {
-  "typescript.tsdk": "node_modules/typescript/lib",
-	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "explicit",
-		"source.removeUnusedImports": "explicit",
-	},
-	"editor.defaultFormatter": "dbaeumer.vscode-eslint",
-	"editor.formatOnSave": true,
-	"editor.tabSize": 2,
-	"eslint.validate": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"svelte"
-	],
-	"[typescript]": {
-		"editor.defaultFormatter": "vscode.typescript-language-features"
-	}
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit",
+    "source.fixAll.biome": "explicit"
+  },
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }
