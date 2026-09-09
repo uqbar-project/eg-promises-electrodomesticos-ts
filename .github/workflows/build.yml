@@ -9,18 +9,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
 
       - name: Node setup
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
+          cache: 'pnpm'
 
-      - run: npm ci
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - run: npm run lint
+      - name: Lint
+        run: pnpm lint
 
-      - run: npm run test:coverage
+      - name: Check types
+        run: pnpm check-types
+
+      - name: Test coverage
+        run: pnpm test:coverage
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
