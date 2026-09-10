@@ -18,7 +18,14 @@ describe('test del cliente async/await', () => {
   const mockFetch = (distanciaEnMetros: number): void => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => ({ json: async () => ({ routes: [{ distance: distanciaEnMetros }] }) })),
+      vi.fn(async () => ({ ok: true, json: async () => ({ routes: [{ distance: distanciaEnMetros }] }) })),
+    )
+  }
+
+  const mockFetchError = (status: number): void => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({ ok: false, status })),
     )
   }
 
@@ -34,16 +41,16 @@ describe('test del cliente async/await', () => {
   test('async / await - Compra exitosa de un LCD TV barata por debajo del saldo del cliente', async () => {
     mockFetch(20000)
     const cliente = new Cliente(2000, casaDelCliente)
-    cliente.caminarA(ubicacionDelNegocio)
-    await cliente.procesoDeCompra(electrodomestico)
+    await cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio)
     expect(cliente.saldo).toBe(500)
   })
 
   test('async / await - Compra exitosa, pero no puede volver en Taxi', async () => {
     mockFetch(20000)
     const cliente = new Cliente(1400, casaDelCliente)
-    cliente.caminarA(ubicacionDelNegocio)
-    await expect(cliente.procesoDeCompra(electrodomestico)).rejects.toThrow('No puedo gastar 500 en Taxi. Tengo $ 400')
+    await expect(cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio)).rejects.toThrow(
+      'No puedo gastar 500 en Taxi. Tengo $ 400',
+    )
 
     expect(cliente.saldo).toBe(400)
   })
@@ -51,11 +58,20 @@ describe('test del cliente async/await', () => {
   test('async / await - Compra fallida, no me alcanza la plata', async () => {
     mockFetch(20000)
     const cliente = new Cliente(900, casaDelCliente)
-    cliente.caminarA(ubicacionDelNegocio)
-    await expect(cliente.procesoDeCompra(electrodomestico)).rejects.toThrow(
+    await expect(cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio)).rejects.toThrow(
       'No puedo gastar 1000 en LCD TV. Tengo $ 900',
     )
 
     expect(cliente.saldo).toBe(900)
+  })
+
+  test('async / await - Fallo del servicio de rutas (HTTP 400)', async () => {
+    mockFetchError(400)
+    const cliente = new Cliente(5000, casaDelCliente)
+    await expect(cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio)).rejects.toThrow(
+      'Error en la llamada al servicio de rutas',
+    )
+
+    expect(cliente.saldo).toBe(4000)
   })
 })

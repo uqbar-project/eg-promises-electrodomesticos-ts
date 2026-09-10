@@ -31,6 +31,11 @@ export class Electrodomestico {
   }
 }
 
+// lanzarError solo es un método para poder usar el syntactic sugar en productoBuscado ?? lanzarError(...)
+// Si queremos hacer productoBuscado ?? throw ... Typescript sabe que throw nunca devuelve una expresión, por lo tanto el compilador falla
+// Si lanzarError quiere tiparse que devuelve void, eso produce error en buscarProducto
+// Entonces lo tipamos que devuelve never => valores que nunca pueden existir (en una función que solo lanza un error, o
+// en referencias a tipos como string & number)
 function lanzarError(mensaje: string): never {
   throw new Error(mensaje)
 }
@@ -64,16 +69,20 @@ export class Cliente {
   async armarViaje(origen: Location, destino: Location): Promise<number> {
     const urlDelViaje = `https://router.project-osrm.org/route/v1/driving/${origen.longitud},${origen.latitud};${destino.longitud},${destino.latitud}?overview=false`
     const respuesta = await fetch(urlDelViaje)
+    if (!respuesta.ok) {
+      throw new Error('Error en la llamada al servicio de rutas')
+    }
     const datosDelViaje = await respuesta.json()
     return datosDelViaje.routes[0].distance
   }
 
   async volverEnTaxi(): Promise<void> {
     const distanciaEnMetros = await this.armarViaje(this.ubicacion, this.casa)
-    this.gastar('Taxi', (distanciaEnMetros / 1000) * VALOR_POR_KM)
+    await this.gastar('Taxi', (distanciaEnMetros / 1000) * VALOR_POR_KM)
   }
 
-  async procesoDeCompra(cosa: Electrodomestico): Promise<void> {
+  async procesoDeCompra(cosa: Electrodomestico, negocio: Location): Promise<void> {
+    this.caminarA(negocio)
     await this.comprar(cosa)
     await this.volverEnTaxi()
   }
@@ -82,9 +91,8 @@ export class Cliente {
 // const ubicacionDelNegocio = new Location(-58.5282, -34.5775)
 // const casaDelCliente = new Location(-58.3816, -34.6037)
 // const cliente = new Cliente(5000, casaDelCliente)
-// cliente.caminarA(ubicacionDelNegocio)
 // cliente
-// .procesoDeCompra(new Electrodomestico(14))
+// .procesoDeCompra(new Electrodomestico(14), ubicacionDelNegocio)
 // .then(() => {
 //   console.log('Proceso de compra finalizado. Saldo: ' + cliente.saldo)
 // })

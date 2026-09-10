@@ -16,7 +16,18 @@ describe('test del cliente', () => {
   }
 
   const mockFetch = (distanciaEnMetros: number): void => {
-    const respuestaOSRM = { json: () => Promise.resolve({ routes: [{ distance: distanciaEnMetros }] }) }
+    const respuestaOSRM = {
+      ok: true,
+      json: () => Promise.resolve({ routes: [{ distance: distanciaEnMetros }] }),
+    }
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.resolve(respuestaOSRM)),
+    )
+  }
+
+  const mockFetchError = (status: number): void => {
+    const respuestaOSRM = { ok: false, status }
     vi.stubGlobal(
       'fetch',
       vi.fn(() => Promise.resolve(respuestaOSRM)),
@@ -35,8 +46,7 @@ describe('test del cliente', () => {
   test('promises - Compra exitosa de un LCD TV barata por debajo del saldo del cliente', () => {
     mockFetch(20000)
     const cliente = new Cliente(2000, casaDelCliente)
-    cliente.caminarA(ubicacionDelNegocio)
-    return cliente.procesoDeCompra(electrodomestico).then(() => {
+    return cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio).then(() => {
       expect(cliente.saldo).toBe(500)
     })
   })
@@ -44,8 +54,7 @@ describe('test del cliente', () => {
   test('promises - Compra exitosa, pero no puede volver en Taxi', () => {
     mockFetch(20000)
     const cliente = new Cliente(1400, casaDelCliente)
-    cliente.caminarA(ubicacionDelNegocio)
-    return expect(cliente.procesoDeCompra(electrodomestico))
+    return expect(cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio))
       .rejects.toThrow('No puedo gastar 500 en Taxi. Tengo $ 400')
       .then(() => expect(cliente.saldo).toBe(400))
   })
@@ -53,9 +62,16 @@ describe('test del cliente', () => {
   test('promises - Compra fallida, no me alcanza la plata', () => {
     mockFetch(20000)
     const cliente = new Cliente(900, casaDelCliente)
-    cliente.caminarA(ubicacionDelNegocio)
-    return expect(cliente.procesoDeCompra(electrodomestico))
+    return expect(cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio))
       .rejects.toThrow('No puedo gastar 1000 en LCD TV. Tengo $ 900')
       .then(() => expect(cliente.saldo).toBe(900))
+  })
+
+  test('promises - Fallo del servicio de rutas (HTTP 400)', () => {
+    mockFetchError(400)
+    const cliente = new Cliente(5000, casaDelCliente)
+    return expect(cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio))
+      .rejects.toThrow('Error en la llamada al servicio de rutas')
+      .then(() => expect(cliente.saldo).toBe(4000))
   })
 })

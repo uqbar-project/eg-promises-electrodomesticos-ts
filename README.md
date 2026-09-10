@@ -29,8 +29,8 @@ Podríamos pensar en una clase cliente que tenga la siguiente lógica
 class Cliente {
   saldo: number = 5000
 
-  procesoDeCompra(cosa: Electrodomestico) {
-    // ir caminando no tiene efecto en nuestro código
+  procesoDeCompra(cosa: Electrodomestico, negocio: Location) {
+    this.caminarA(negocio) // ir caminando al negocio, la ubicacion cambia
     const producto = cosa.obtenerProducto()
     // valido que tenga suficiente plata, y bajo el saldo
     this.gastar(producto.descripcion, producto.precio)
@@ -160,16 +160,16 @@ Recordemos que una vez que iniciamos una promesa, estaremos trabajando siempre e
 
 Pero volvamos una vez más a la idea de
 
+- ir caminando hasta el negocio (sincrónico: actualiza la `ubicacion` del cliente)
 - comprar el electrodoméstico (lo que implica leer el catálogo del archivo `productos.json` y pagar el valor de dicho electrodoméstico)
 - volvernos en taxi (lo que implica consultar la distancia del viaje y pagar el valor del taxi)
 
-Cada paso implica una pausa, un momento en el que vamos a delegar el control en el procesador para que se ejecuten otros procesos. La implementación se hace de esta manera:
+La caminata al negocio es una operación **sincrónica**: solo actualiza la ubicación del cliente. Por eso la hacemos antes de empezar a encadenar promesas. El resto del proceso se implementa de esta manera:
 
 ```ts
-  procesoDeCompra(cosa: Electrodomestico): Promise<void> {
-    return Promise.resolve()
-      .then(() => this.comprar(cosa))
-      .then(() => this.volverEnTaxi())
+  procesoDeCompra(cosa: Electrodomestico, negocio: Location): Promise<void> {
+    this.caminarA(negocio)
+    return this.comprar(cosa).then(() => this.volverEnTaxi())
   }
 ```
 
@@ -190,9 +190,10 @@ El primer paso es obtener el producto del catálogo `productos.json`, que es una
 ```ts
   obtenerProducto(): Promise<Producto> {
     const urlDelArchivo = new URL('../productos.json', import.meta.url)
-    return readFile(urlDelArchivo, 'utf-8')
-      .then((contenidoDelArchivo) => JSON.parse(contenidoDelArchivo) as Producto[])
-      .then((productos) => this.buscarProducto(productos, this.id))
+    return readFile(urlDelArchivo, 'utf-8').then((contenidoDelArchivo) => {
+      const productos = JSON.parse(contenidoDelArchivo) as Producto[]
+      return this.buscarProducto(productos, this.id)
+    })
   }
 ```
 
@@ -222,22 +223,27 @@ No hacemos nada en `comprar` ni en `procesoDeCompra`, porque _no tiene mucho sen
 
 ### ¿De dónde sale el valor del taxi?
 
-El cliente conoce su casa (`casa`) y se ubica inicialmente en ella. Cuando camina hasta el negocio, su `ubicacion` cambia:
+El cliente conoce su casa (`casa`) y se ubica inicialmente en ella. El proceso de compra recibe el negocio como segundo parámetro: su primera instrucción es caminar hasta el negocio (`caminarA`), actualizando la `ubicacion`:
 
 ```ts
 const casaDelCliente = new Location(-58.3816, -34.6037)
 const ubicacionDelNegocio = new Location(-58.5282, -34.5775)
 const cliente = new Cliente(5000, casaDelCliente)
-cliente.caminarA(ubicacionDelNegocio)   // ahora ubicacion = ubicacionDelNegocio
+cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio) // camina, compra y vuelve en taxi
 ```
 
-Al volver en taxi, el destino es la casa. Para saber cuánto cuesta, consultamos un servicio de rutas (OSRM) que nos devuelve la distancia en metros entre la ubicación actual y la casa:
+Al volver en taxi, el destino es la casa. Para saber cuánto cuesta, consultamos un servicio de rutas (OSRM) que nos devuelve la distancia en metros entre la ubicación actual y la casa. Cuidado: una llamada HTTP puede fallar (por ejemplo un 400 o un 500), así que **chequeamos `respuesta.ok`** antes de parsear el JSON y, si falló, lanzamos un error genérico:
 
 ```ts
   armarViaje(origen: Location, destino: Location): Promise<number> {
     const urlDelViaje = `https://router.project-osrm.org/route/v1/driving/${origen.longitud},${origen.latitud};${destino.longitud},${destino.latitud}?overview=false`
     return fetch(urlDelViaje)
-      .then((respuesta) => respuesta.json())
+      .then((respuesta) => {
+        if (!respuesta.ok) {
+          throw new Error('Error en la llamada al servicio de rutas')
+        }
+        return respuesta.json()
+      })
       .then((datosDelViaje) => datosDelViaje.routes[0].distance)
   }
 
@@ -258,8 +264,7 @@ En los tests encontrarán los diferentes escenarios:
 test('Compra exitosa de un LCD TV barata por debajo del saldo del cliente', () => {
   mockFetch(20000) // 20 kilómetros => $ 500 de taxi
   const cliente = new Cliente(2000, casaDelCliente)
-  cliente.caminarA(ubicacionDelNegocio)
-  return cliente.procesoDeCompra(electrodomestico).then(() => {
+  return cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio).then(() => {
     expect(cliente.saldo).toBe(500)
   })
 })
@@ -271,8 +276,7 @@ Por el contrario si la compra es exitosa pero no nos alcanza para el taxi, o si 
 test('Compra exitosa, pero no puede volver en Taxi', () => {
   mockFetch(20000)
   const cliente = new Cliente(1400, casaDelCliente)
-  cliente.caminarA(ubicacionDelNegocio)
-  return expect(cliente.procesoDeCompra(electrodomestico))
+  return expect(cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio))
     .rejects.toThrow('No puedo gastar 500 en Taxi. Tengo $ 400')
     .then(() => expect(cliente.saldo).toBe(400))
 })
@@ -280,17 +284,26 @@ test('Compra exitosa, pero no puede volver en Taxi', () => {
 test('Compra fallida, no me alcanza la plata', () => {
   mockFetch(20000)
   const cliente = new Cliente(900, casaDelCliente)
-  cliente.caminarA(ubicacionDelNegocio)
-  return expect(cliente.procesoDeCompra(electrodomestico))
+  return expect(cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio))
     .rejects.toThrow('No puedo gastar 1000 en LCD TV. Tengo $ 900')
     .then(() => expect(cliente.saldo).toBe(900))
+})
+
+test('Fallo del servicio de rutas (HTTP 400)', () => {
+  mockFetchError(400)
+  const cliente = new Cliente(5000, casaDelCliente)
+  return expect(cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio))
+    .rejects.toThrow('Error en la llamada al servicio de rutas')
+    .then(() => expect(cliente.saldo).toBe(4000))
 })
 ```
 
 En la versión async/await usamos el mismo matcher, pero con `await` en lugar de encadenar (así la línea queda parecida a una espera síncrona):
 
 ```ts
-await expect(cliente.procesoDeCompra(electrodomestico)).rejects.toThrow('No puedo gastar 1000 en LCD TV. Tengo $ 900')
+await expect(cliente.procesoDeCompra(electrodomestico, ubicacionDelNegocio)).rejects.toThrow(
+  'No puedo gastar 1000 en LCD TV. Tengo $ 900',
+)
 ```
 
 De esta manera el caso de éxito se verifica con el bloque `then`, y los errores con el matcher `rejects`.
@@ -298,13 +311,14 @@ De esta manera el caso de éxito se verifica con el bloque `then`, y los errores
 Para que los tests sean determinísticos (y no dependan de la red ni del contenido real del archivo), se simulan las dos operaciones asincrónicas:
 
 - `readFile` se mockea con `vi.mock('node:fs/promises')`, devolviendo el catálogo con un único producto: el LCD TV de $ 1000.
-- `fetch` se reemplaza por un stub que responde el resultado de OSRM con una distancia fija (20000 metros).
+- `fetch` se reemplaza por un stub. En el caso feliz responde `ok: true` y el resultado de OSRM con una distancia fija (20000 metros); en el caso de error responde `ok: false` con un status HTTP (usamos `mockFetchError` para simular el 400).
 
 Los escenarios cubiertos son:
 
 - me alcanza para comprar el electrodoméstico y para el taxi => promesa resuelta exitosamente, me queda $ 500.
 - me alcanza para comprar el electrodoméstico pero no para el taxi => promesa rechazada, me queda $ 400.
 - no me alcanza para comprar el electrodoméstico => promesa rechazada, mi saldo no cambia ($ 900).
+- el servicio de rutas responde con un error HTTP (400) => promesa rechazada; ya pagamos el televisor ($ 1000) pero no pudimos calcular ni pagar el taxi, nos queda $ 4000.
 
 Salvo el caso que explícitamente dice "promesa resuelta exitosamente", los demás tests estarán esperando el rechazo con el matcher `rejects`.
 
